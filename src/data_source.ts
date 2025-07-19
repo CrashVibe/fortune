@@ -49,10 +49,10 @@ export async function get_user_fortune(ctx: Context, user: string): Promise<Fort
     if (results.length > 1) {
         console.warn(`用户 ${user} 有多条运势记录，可能是数据异常，请检查数据库。`);
     }
-    // 比对日期是否与今天相同
-    const today = new Date().toISOString().split('T')[0];
-    const resultDate = results[0].date.toISOString().split('T')[0];
-    if (resultDate !== today) {
+    const recordDate = new Date(results[0].date);
+    const today = new Date();
+
+    if (recordDate.toISOString().split('T')[0] !== today.toISOString().split('T')[0]) {
         // 日期不同，随机获取一条运势
         const randomFortune = random_fortune();
         await ctx.database.set(
@@ -96,7 +96,9 @@ function random_fortune(): {
  */
 export async function get_user_fortune_display(ctx: Context, user: string): Promise<string | null> {
     const fortune = await get_user_fortune(ctx, user);
-    if (!fortune) return null;
+    if (!fortune) {
+        return null;
+    }
 
     return `📜 今日签文 📜
 

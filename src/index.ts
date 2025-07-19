@@ -3,7 +3,7 @@ import applyModel from './model';
 import { get_user_fortune_display } from './data_source';
 
 export const name = 'fortune';
-
+export const inject = ['database'];
 export interface Config {}
 
 export const Config: Schema<Config> = Schema.object({});
