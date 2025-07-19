@@ -1,5 +1,7 @@
 import { Context } from 'koishi';
 import fortuneData from './fortune_data.json';
+import moment from 'moment-timezone';
+import { Config } from '.';
 
 export interface FortuneInfo {
     运势: string;
@@ -34,7 +36,7 @@ export async function get_user_luck_star(ctx: Context, user: string): Promise<nu
  * @param user - 需要获取运势信息的用户标识符。
  * @returns 包含用户运势信息的对象 object，如果未找到则为 null。
  */
-export async function get_user_fortune(ctx: Context, user: string): Promise<FortuneInfo> {
+export async function get_user_fortune(ctx: Context, config: Config, user: string): Promise<FortuneInfo> {
     const results = await ctx.database.get('fortune', { user });
     if (results.length == 0) {
         // 创建
@@ -49,10 +51,10 @@ export async function get_user_fortune(ctx: Context, user: string): Promise<Fort
     if (results.length > 1) {
         console.warn(`用户 ${user} 有多条运势记录，可能是数据异常，请检查数据库。`);
     }
-    const recordDate = new Date(results[0].date);
-    const today = new Date();
+    const recordDate = moment(results[0].date).tz(config.timezone);
+    const today = moment().tz(config.timezone);
 
-    if (recordDate.toISOString().split('T')[0] !== today.toISOString().split('T')[0]) {
+    if (recordDate.format('YYYY-MM-DD') !== today.format('YYYY-MM-DD')) {
         // 日期不同，随机获取一条运势
         const randomFortune = random_fortune();
         await ctx.database.set(
@@ -94,8 +96,8 @@ function random_fortune(): {
  * @param user - 需要获取运势信息的用户标识符。
  * @returns 字符串完整的display信息
  */
-export async function get_user_fortune_display(ctx: Context, user: string): Promise<string | null> {
-    const fortune = await get_user_fortune(ctx, user);
+export async function get_user_fortune_display(ctx: Context, config: Config, user: string): Promise<string | null> {
+    const fortune = await get_user_fortune(ctx, config, user);
     if (!fortune) {
         return null;
     }
