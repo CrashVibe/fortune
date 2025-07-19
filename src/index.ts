@@ -13,7 +13,7 @@ export const Config: Schema<Config> = Schema.object({
 });
 
 export async function apply(ctx: Context, config: Config) {
-    await applyModel(ctx);
+    applyModel(ctx);
     ctx.command('运势')
         .alias('今日运势')
         .action(async ({ session }) => {
