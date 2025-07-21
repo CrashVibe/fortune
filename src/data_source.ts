@@ -1,7 +1,7 @@
-import { Context } from 'koishi';
-import fortuneData from './fortune_data.json';
-import moment from 'moment-timezone';
-import { Config } from '.';
+import { Context } from "koishi";
+import fortuneData from "./fortune_data.json";
+import moment from "moment-timezone";
+import { Config } from ".";
 
 export interface FortuneInfo {
     运势: string;
@@ -21,10 +21,10 @@ const fortuneDataMap = fortuneData as Record<string, FortuneInfo>;
  * @returns 解析为用户的星数值（number），如果未找到则为 null。
  */
 export async function get_user_luck_star(ctx: Context, user: string): Promise<number | null> {
-    const results = await ctx.database.get('fortune', { user });
+    const results = await ctx.database.get("fortune", { user });
     const result = results[0];
     if (result) {
-        return fortuneDataMap[result.luckid].星级.split('★').length - 1;
+        return fortuneDataMap[result.luckid].星级.split("★").length - 1;
     }
     return null;
 }
@@ -37,11 +37,11 @@ export async function get_user_luck_star(ctx: Context, user: string): Promise<nu
  * @returns 包含用户运势信息的对象 object，如果未找到则为 null。
  */
 export async function get_user_fortune(ctx: Context, config: Config, user: string): Promise<FortuneInfo> {
-    const results = await ctx.database.get('fortune', { user });
+    const results = await ctx.database.get("fortune", { user });
     if (results.length == 0) {
         // 创建
         const randomFortune = random_fortune();
-        await ctx.database.create('fortune', {
+        await ctx.database.create("fortune", {
             user,
             luckid: randomFortune.id,
             date: new Date()
@@ -54,11 +54,11 @@ export async function get_user_fortune(ctx: Context, config: Config, user: strin
     const recordDate = moment(results[0].date).tz(config.timezone);
     const today = moment().tz(config.timezone);
 
-    if (recordDate.format('YYYY-MM-DD') !== today.format('YYYY-MM-DD')) {
+    if (recordDate.format("YYYY-MM-DD") !== today.format("YYYY-MM-DD")) {
         // 日期不同，随机获取一条运势
         const randomFortune = random_fortune();
         await ctx.database.set(
-            'fortune',
+            "fortune",
             { user },
             {
                 luckid: randomFortune.id,

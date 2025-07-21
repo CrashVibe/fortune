@@ -1,6 +1,6 @@
-import { Context } from 'koishi';
+import { Context } from "koishi";
 
-declare module 'koishi' {
+declare module "koishi" {
     interface Tables {
         fortune: Fortune;
     }
@@ -15,13 +15,13 @@ export interface Fortune {
 
 async function applyModel(ctx: Context) {
     ctx.model.extend(
-        'fortune',
+        "fortune",
         {
-            user: { type: 'string' },
-            luckid: 'string',
-            date: 'date'
+            user: { type: "string" },
+            luckid: "string",
+            date: "date"
         },
-        { primary: 'user' }
+        { primary: "user" }
     );
 }
 
