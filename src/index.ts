@@ -14,7 +14,7 @@ export const Config: Schema<Config> = Schema.object({
 
 export async function apply(ctx: Context, config: Config) {
     applyModel(ctx);
-    ctx.command("运势")
+    ctx.command("运势", "获取今日运势 (每天刷新)")
         .alias("今日运势")
         .action(async ({ session }) => {
             if (!session || !session.userId) {
