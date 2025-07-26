@@ -1,7 +1,7 @@
 import { Context } from "koishi";
 import fortuneData from "./fortune_data.json";
 import moment from "moment-timezone";
-import { Config } from ".";
+import Fortune from ".";
 
 export interface FortuneInfo {
     运势: string;
@@ -36,7 +36,7 @@ export async function get_user_luck_star(ctx: Context, user: string): Promise<nu
  * @param user - 需要获取运势信息的用户标识符。
  * @returns 包含用户运势信息的对象 object，如果未找到则为 null。
  */
-export async function get_user_fortune(ctx: Context, config: Config, user: string): Promise<FortuneInfo> {
+export async function get_user_fortune(ctx: Context, config: Fortune.Config, user: string): Promise<FortuneInfo> {
     const results = await ctx.database.get("fortune", { user });
     if (results.length == 0) {
         // 创建
@@ -96,7 +96,11 @@ function random_fortune(): {
  * @param user - 需要获取运势信息的用户标识符。
  * @returns 字符串完整的display信息
  */
-export async function get_user_fortune_display(ctx: Context, config: Config, user: string): Promise<string | null> {
+export async function get_user_fortune_display(
+    ctx: Context,
+    config: Fortune.Config,
+    user: string
+): Promise<string | null> {
     const fortune = await get_user_fortune(ctx, config, user);
     if (!fortune) {
         return null;
