@@ -13,7 +13,7 @@ export interface Fortune {
     date: Date;
 }
 
-async function applyModel(ctx: Context) {
+export function applyModel(ctx: Context) {
     ctx.model.extend(
         "fortune",
         {
