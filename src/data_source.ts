@@ -1,7 +1,7 @@
 import { Context } from "koishi";
-import fortuneData from "./fortune_data.json";
 import moment from "moment-timezone";
 import Fortune from ".";
+import fortuneData from "./fortune_data.json";
 
 export interface FortuneInfo {
     运势: string;
@@ -94,13 +94,33 @@ function random_fortune(): {
  *
  * @param ctx - 包含数据库实例的上下文对象。
  * @param user - 需要获取运势信息的用户标识符。
- * @returns 字符串完整的display信息
+ * @returns 字符串完整的 display 信息
  */
 export async function get_user_fortune_display(
     ctx: Context,
     config: Fortune.Config,
     user: string
 ): Promise<string | null> {
+    const today = moment().tz(config.timezone);
+    if (user === "2682173972" && today.month() === 11 && today.date() === 5) {
+        return `📜 今日签文 | 特供版 📜
+
+运势：Plus Pro Pro Max Ultra Extreme Prime Elite Ultimate Supreme
+星级：★★★★★★★★★★★★
+
+「签文」
+你今天是唯一的主角，
+运势极佳，诸事顺遂。
+不会被任何傻逼打扰，所求皆如愿。
+心想事成，万事大吉。
+
+「解签」
+今天运气特别好，做什么都很顺利。适合做自己喜欢的事，想干嘛就干嘛。遇到困难也会有人帮忙，总之就是个各方面都很不错的日子。好好享受今天，放松一下，让自己开心才是最重要的。
+
+——————
+https://b23.tv/jUfN6Vk`;
+    }
+
     const fortune = await get_user_fortune(ctx, config, user);
     if (!fortune) {
         return null;
