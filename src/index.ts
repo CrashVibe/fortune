@@ -1,6 +1,6 @@
 import { Awaitable, Context, Schema, Service } from "koishi";
-import { applyModel } from "./model";
 import { get_user_fortune_display, get_user_luck_star } from "./data_source";
+import { applyModel } from "./model";
 
 export const name = "fortune";
 
@@ -47,10 +47,16 @@ class Fortune extends Service {
 namespace Fortune {
     export interface Config {
         timezone: string;
+        specialUserHash?: string;
+        specialMonth?: number;
+        specialDay?: number;
     }
 
     export const Config: Schema<Config> = Schema.object({
-        timezone: Schema.string().default("Asia/Shanghai")
+        timezone: Schema.string().default("Asia/Shanghai"),
+        specialUserHash: Schema.string().description("生日用户 ID 的 SHA256 哈希值"),
+        specialMonth: Schema.number().min(1).max(12).description("生日的用户的 Month"),
+        specialDay: Schema.number().min(1).max(31).description("生日的用户的 Day")
     });
 }
 export default Fortune;

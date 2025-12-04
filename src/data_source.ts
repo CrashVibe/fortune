@@ -1,3 +1,4 @@
+import { createHash } from "crypto";
 import { Context } from "koishi";
 import moment from "moment-timezone";
 import Fortune from ".";
@@ -102,8 +103,18 @@ export async function get_user_fortune_display(
     user: string
 ): Promise<string | null> {
     const today = moment().tz(config.timezone);
-    if (user === "2682173972" && today.month() === 11 && today.date() === 5) {
-        return `📜 今日签文 | 特供版 📜
+
+    if (
+        config.specialUserHash &&
+        typeof config.specialMonth === "number" &&
+        typeof config.specialDay === "number" &&
+        today.month() === config.specialMonth - 1 &&
+        today.date() === config.specialDay
+    ) {
+        const userHash = createHash("sha256").update(user).digest("hex");
+
+        if (userHash === config.specialUserHash) {
+            return `📜 今日签文 | 特供版 📜
 
 运势：Plus Pro Pro Max Ultra Extreme Prime Elite Ultimate Supreme
 星级：★★★★★★★★★★★★
@@ -119,6 +130,7 @@ export async function get_user_fortune_display(
 
 ——————
 https://b23.tv/jUfN6Vk`;
+        }
     }
 
     const fortune = await get_user_fortune(ctx, config, user);
