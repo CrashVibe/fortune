@@ -1,4 +1,4 @@
-import { Awaitable, Context, Schema, Service } from "koishi";
+import { Awaitable, Context, h, Schema, Service } from "koishi";
 import { get_user_fortune_display, get_user_luck_star } from "./data_source";
 import { applyModel } from "./model";
 
@@ -32,11 +32,10 @@ class Fortune extends Service {
             .alias("今日运势")
             .action(async ({ session }) => {
                 if (!session || !session.userId) {
-                    this.ctx.logger.warn("运势命令需要用户上下文，无法获取用户ID。");
-                    return "出现一点错误，请稍后再试";
+                    throw new Error("会话对象不存在");
                 }
                 const result = await get_user_fortune_display(this.ctx, this.config, session.userId);
-                return result ?? "未能获取到今日运势。";
+                return h.quote(session.messageId) + (result ?? "未能获取到今日运势。");
             });
     }
 
