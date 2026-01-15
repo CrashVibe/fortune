@@ -1,5 +1,5 @@
 import { Awaitable, Context, h, Schema, Service } from "koishi";
-import { get_user_fortune_display, get_user_luck_star } from "./data_source";
+import { get_user_fortune_display, get_user_luck_star } from "./services";
 import { applyModel } from "./model";
 
 export const name = "fortune";
